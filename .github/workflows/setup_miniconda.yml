@@ -1,0 +1,35 @@
+name: setup_env
+
+on:
+  push:
+    branches:
+    - main
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup environment
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+            auto-activate-base: true
+            activate-environment: ""
+
+
+      - name: Install conda-lock
+        run: conda install -c conda-forge conda-lock=1.0.5
+        
+      - name: Install environment
+        run: conda-lock install --name gamae1 conda-lock.yml
+        
+      - name: Activate environtment
+        run: conda activate gamae1
+      
+      - name: Confirm that this worked
+        run: echo 'we made it this far'
